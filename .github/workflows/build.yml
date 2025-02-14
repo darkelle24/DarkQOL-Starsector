@@ -3,8 +3,8 @@ name: Build and Release PlayerWeaponShop
 on:
   push:
     branches:
-      - main  # Remplace par ta branche principale si besoin
-  workflow_dispatch:  # Permet de lancer manuellement l'action
+      - main  # Change si nécessaire
+  workflow_dispatch:  # Permet de lancer l'action manuellement
 
 jobs:
   build:
@@ -40,10 +40,11 @@ jobs:
           rar a PlayerWeaponShop.rar release/
 
       - name: Upload Artifact (RAR)
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: PlayerWeaponShop
           path: PlayerWeaponShop.rar
+          retention-days: 7  # Supprime l'artefact après 7 jours
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

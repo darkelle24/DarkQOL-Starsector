@@ -2,16 +2,11 @@ package playerweaponshop;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
-import com.fs.starfarer.api.campaign.econ.MarketAPI;
 import com.fs.starfarer.api.impl.campaign.submarkets.BaseSubmarketPlugin;
-import com.fs.starfarer.api.campaign.CargoStackAPI;
-import com.fs.starfarer.api.campaign.econ.Industry;
-import com.fs.starfarer.api.combat.WeaponAPI;
 import com.fs.starfarer.api.loading.FighterWingSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
-import com.fs.starfarer.api.util.WeightedRandomPicker;
+import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import java.util.List;
 import java.util.Set;
 
 public class PlayerWeaponShopSubmarketPlugin extends BaseSubmarketPlugin {
@@ -21,7 +16,7 @@ public class PlayerWeaponShopSubmarketPlugin extends BaseSubmarketPlugin {
     @Override
     public void init(SubmarketAPI submarket) {
         super.init(submarket);
-        this.submarket.setFaction(Global.getSector().getFaction("player"));
+        this.submarket.setFaction(Global.getSector().getFaction("playerWeaponShopColor"));
     }
 
     @Override
@@ -50,7 +45,7 @@ public class PlayerWeaponShopSubmarketPlugin extends BaseSubmarketPlugin {
         for (String weaponId : unlockedWeapons) {
             WeaponSpecAPI weaponSpec = Global.getSettings().getWeaponSpec(weaponId);
             if (weaponSpec != null) {
-                getCargo().addWeapons(weaponId, 20);
+                getCargo().addWeapons(weaponId, 50);
             }
         }
     }
@@ -60,7 +55,7 @@ public class PlayerWeaponShopSubmarketPlugin extends BaseSubmarketPlugin {
         for (String fighterId : unlockedFighters) {
             FighterWingSpecAPI fighterSpec = Global.getSettings().getFighterWingSpec(fighterId);
             if (fighterSpec != null) {
-                getCargo().addFighters(fighterId, 20);
+                getCargo().addFighters(fighterId, 50);
             }
         }
     }
@@ -78,5 +73,21 @@ public class PlayerWeaponShopSubmarketPlugin extends BaseSubmarketPlugin {
     @Override
     public String getIllegalTransferText(com.fs.starfarer.api.campaign.CargoStackAPI stack, TransferAction action) {
         return "You cannot sell items here.";
+    }
+
+    @Override
+    public boolean isTooltipExpandable() { // TODO: 18/06/2020 tooltip expand stuff
+        return super.isTooltipExpandable();
+    }
+
+    @Override
+    protected void createTooltipAfterDescription(TooltipMakerAPI tooltip, boolean expanded) {
+        super.createTooltipAfterDescription(tooltip, expanded);
+        tooltip.addPara("The Player Weapon Shop Market allows the player to purchase all unlocked weapons and fighters. Selling items is not allowed.", 10f);
+    }
+
+    @Override
+    public float getTariff() {
+        return 1.0f;
     }
 }

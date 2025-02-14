@@ -22,6 +22,17 @@
             },
             "problemMatcher": ["$tsc"],
             "detail": "Delete existing JAR (if any) and create a new one in the jars directory."
+        },
+        {
+            "label": "Compile and Package PlayerWeaponShop",
+            "type": "shell",
+            "command": "javac -d bin -sourcepath src -cp \"c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\*\" src\\playerweaponshop\\*.java && jar cvf jars\\PlayerWeaponShop.jar -C bin . && \"C:\\Program Files\\WinRAR\\Rar.exe\" a -r ..\\PlayerWeaponShop.rar ./**",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$tsc"],
+            "detail": "Compile Java source files into the bin directory, create a JAR, and then package it into a RAR file placed in the parent directory."
         }
     ]
 }
