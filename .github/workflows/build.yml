@@ -1,0 +1,59 @@
+name: Build and Release PlayerWeaponShop
+
+on:
+  push:
+    branches:
+      - main  # Remplace par ta branche principale si besoin
+  workflow_dispatch:  # Permet de lancer manuellement l'action
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '8'
+
+      - name: Compile Java Code
+        run: |
+          mkdir -p bin
+          javac -d bin -sourcepath src -cp "lib/*" src/playerweaponshop/*.java
+
+      - name: Create JAR
+        run: |
+          mkdir -p jars
+          jar cvf jars/PlayerWeaponShop.jar -C bin .
+
+      - name: Install rar (for compression)
+        run: sudo apt-get install rar -y
+
+      - name: Create RAR Archive
+        run: |
+          mkdir -p release
+          cp -r data graphics jars mod_info.json release/
+          rar a PlayerWeaponShop.rar release/
+
+      - name: Upload Artifact (RAR)
+        uses: actions/upload-artifact@v3
+        with:
+          name: PlayerWeaponShop
+          path: PlayerWeaponShop.rar
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/main'
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: PlayerWeaponShop Release v1.0.${{ github.run_number }}
+          body: "Automated release of PlayerWeaponShop mod."
+          draft: false
+          prerelease: false
+          files: PlayerWeaponShop.rar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
