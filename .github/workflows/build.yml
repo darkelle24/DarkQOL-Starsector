@@ -3,6 +3,9 @@ name: Build and Release PlayerWeaponShop
 on:
   workflow_dispatch:  # Permet de lancer l'action manuellement
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
