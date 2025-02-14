@@ -1,0 +1,12 @@
+{
+  "id": "player_weapon_shop",
+  "name": "Player Weapon Shop",
+  "author": "Darkelle24",
+  "version": "1.2",
+  "description": "Ajoute un bâtiment spécial qui crée un sous-marché.",
+  "gameVersion": "0.97a",
+  "jars": [
+    "jars/PlayerWeaponShop.jar"
+  ],
+  "modPlugin": "playerweaponshop.PlayerWeaponShopModPlugin"
+}

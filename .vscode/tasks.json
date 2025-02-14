@@ -1,0 +1,27 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile PlayerWeaponShop",
+            "type": "shell",
+            "command": "javac -d bin -sourcepath src -cp \"c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\*\" src/playerweaponshop/*.java",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$tsc"],
+            "detail": "Compile Java source files into the bin directory."
+        },
+        {
+            "label": "Create PlayerWeaponShop JAR",
+            "type": "shell",
+            "command": "jar cvf jars/PlayerWeaponShop.jar -C bin .",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$tsc"],
+            "detail": "Delete existing JAR (if any) and create a new one in the jars directory."
+        }
+    ]
+}

@@ -1,0 +1,2 @@
+id,name,faction,desc,script,icon,order
+PlayerWeaponShopMarket,Player Weapon Market,player,Provides access to rare weapons and military-grade equipment.,playerweaponshop.PlayerWeaponShopSubmarketPlugin,graphics/factions/player_weapon_market.png,1150

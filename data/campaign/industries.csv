@@ -1,0 +1,2 @@
+id,name,cost mult,build time,income,upkeep,downgrade,upgrade,tags,data,image,plugin,desc,order,disruptDanger
+PlayerWeaponShopIndustry,Player Weapon Shop,75,30,,6,,,"industry, weaponshop",,graphics/industry/player_weapon_shop.png,playerweaponshop.PlayerWeaponShopIndustry,"A specialized facility that provides exclusive access to a hidden weapon market.Only available for player-owned colonies, this industry does not interact with the economy.",600,
