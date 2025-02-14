@@ -20,16 +20,6 @@ jobs:
           distribution: 'temurin'
           java-version: '8'
 
-      - name: Compile Java Code
-        run: |
-          mkdir -p bin
-          javac -d bin -sourcepath src -cp "lib/*" src/playerweaponshop/*.java
-
-      - name: Create JAR
-        run: |
-          mkdir -p jars
-          jar cvf jars/PlayerWeaponShop.jar -C bin .
-
       - name: Install rar (for compression)
         run: sudo apt-get install rar -y
 
