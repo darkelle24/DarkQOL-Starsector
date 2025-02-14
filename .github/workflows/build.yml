@@ -1,9 +1,6 @@
 name: Build and Release PlayerWeaponShop
 
 on:
-  push:
-    branches:
-      - main  # Change si nécessaire
   workflow_dispatch:  # Permet de lancer l'action manuellement
 
 jobs:
