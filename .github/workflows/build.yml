@@ -25,8 +25,9 @@ jobs:
 
       - name: Create RAR Archive
         run: |
-          mkdir -p release
-          cp -r data graphics jars mod_info.json PlayerWeaponShop/ && rar a -r PlayerWeaponShop.rar PlayerWeaponShop/
+          mkdir -p PlayerWeaponShop
+          cp -r data graphics jars mod_info.json PlayerWeaponShop/ 
+          rar a -r PlayerWeaponShop.rar PlayerWeaponShop/
 
       - name: Upload Artifact (RAR)
         uses: actions/upload-artifact@v4
