@@ -1,4 +1,6 @@
-package playerweaponshop;
+package darkqol.submarkets;
+
+import java.util.Set;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
@@ -7,21 +9,21 @@ import com.fs.starfarer.api.loading.FighterWingSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
-import java.util.Set;
+import darkqol.ids.Ids;
 
-public class PlayerWeaponShopSubmarketPlugin extends BaseSubmarketPlugin {
+public class PrivateArsenalSubmarketPlugin extends BaseSubmarketPlugin {
 
     private boolean isActive = false;
 
     @Override
     public void init(SubmarketAPI submarket) {
         super.init(submarket);
-        this.submarket.setFaction(Global.getSector().getFaction("playerWeaponShopColor"));
+        this.submarket.setFaction(Global.getSector().getFaction("darkPlayerWeaponShopColor"));
     }
 
     @Override
     public void updateCargoPrePlayerInteraction() {
-        if (!market.hasIndustry("PlayerWeaponShopIndustry")) {
+        if (!market.hasIndustry(Ids.PRIVATE_ARSENAL_IND)) {
             isActive = false;
             getCargo().clear();
             return;
@@ -83,11 +85,18 @@ public class PlayerWeaponShopSubmarketPlugin extends BaseSubmarketPlugin {
     @Override
     protected void createTooltipAfterDescription(TooltipMakerAPI tooltip, boolean expanded) {
         super.createTooltipAfterDescription(tooltip, expanded);
-        tooltip.addPara("The Player Weapon Shop Market allows the player to purchase all unlocked weapons and fighters. Selling items is not allowed.", 10f);
+        tooltip.addPara(
+                "The Player Weapon Shop Market allows the player to purchase all unlocked weapons and fighters. Selling items is not allowed.",
+                10f);
     }
 
     @Override
     public float getTariff() {
         return 1.0f;
+    }
+
+    @Override
+    public boolean showInFleetScreen() {
+        return false;
     }
 }

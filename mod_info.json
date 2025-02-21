@@ -1,12 +1,14 @@
 {
-  "id": "player_weapon_shop",
-  "name": "Player Weapon Shop",
+  "id": "dark_qol",
+  "name": "Dark QOL",
   "author": "Darkelle24",
-  "version": "1.3",
-  "description": "Ajoute un bâtiment spécial qui crée un sous-marché.",
+  "version": "1.313994",
+  "description": "",
   "gameVersion": "0.97a-RC11",
   "jars": [
-    "jars/PlayerWeaponShop.jar"
+    "jars/DarkQOL.jar"
   ],
-  "modPlugin": "playerweaponshop.PlayerWeaponShopModPlugin"
+  "modPlugin": "darkqol.DarkQOLModPlugin",
+  "modThreadId": "YOUR_THREAD_ID",
+  "updateCheckURL": "https://raw.githubusercontent.com/TON_GITHUB/TON_MOD/main/version.json"
 }
