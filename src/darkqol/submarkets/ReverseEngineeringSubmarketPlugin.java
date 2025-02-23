@@ -1,16 +1,16 @@
 package darkqol.submarkets;
 
+import com.fs.starfarer.api.campaign.CargoStackAPI;
 import com.fs.starfarer.api.campaign.CoreUIAPI;
 import com.fs.starfarer.api.campaign.SubmarketPlugin;
-import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
-import com.fs.starfarer.api.impl.campaign.submarkets.BaseSubmarketPlugin;
+import com.fs.starfarer.api.fleet.FleetMemberAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import darkqol.ids.Ids;
-import darkqol.industries.ReverseEngineeringIndustry;
+import darkqol.utils.DarkBaseSubmarketPlugin;
 
-public class ReverseEngineeringSubmarketPlugin extends BaseSubmarketPlugin {
+public class ReverseEngineeringSubmarketPlugin extends DarkBaseSubmarketPlugin {
     public void init(SubmarketAPI submarket) {
         super.init(submarket);
     }
@@ -21,8 +21,37 @@ public class ReverseEngineeringSubmarketPlugin extends BaseSubmarketPlugin {
     }
 
     @Override
+    public String getName() {
+        String toReturn = "Reverse\n" +
+                "Engineering\n" +
+                "Storage ";
+        if (market.hasIndustry(Ids.REVERSE_ENG_1_IND)) {
+            toReturn += "I";
+        } else if (market.hasIndustry(Ids.REVERSE_ENG_2_IND)) {
+            toReturn += "II";
+        } else if (market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
+            toReturn += "III";
+        }
+        return toReturn;
+    }
+
+    @Override
+    public String getDesc() {
+        String toReturn = "Deposit ships / weapons / wing for disassembly here, to gain progress on the research of a blueprint.";
+        toReturn += "\n\n";
+        if (market.hasIndustry(Ids.REVERSE_ENG_1_IND)) {
+            toReturn += "Tier 1: Only weapons are allowed.";
+        } else if (market.hasIndustry(Ids.REVERSE_ENG_2_IND)) {
+            toReturn += "Tier 2: Only weapons and fighter wings are allowed.";
+        } else if (market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
+            toReturn += "Tier 3: Weapons, fighter wings, and ships are allowed.";
+        }
+        return toReturn;
+    }
+
+    @Override
     public boolean showInCargoScreen() {
-        return false;
+        return true;
     }
 
     @Override
@@ -60,9 +89,77 @@ public class ReverseEngineeringSubmarketPlugin extends BaseSubmarketPlugin {
         return market.isPlayerOwned();
     }
 
+    // FIX: To fix this
     @Override
     protected void createTooltipAfterDescription(TooltipMakerAPI tooltip, boolean expanded) {
-        ((ReverseEngineeringIndustry) market.getIndustry(Ids.REVERSE_ENG_IND)).addCurrentProjectTooltip(tooltip,
-                Industry.IndustryTooltipMode.NORMAL);
+        // ((ReverseEngineeringIndustry)
+        // market.getIndustry(Ids.REVERSE_ENG_IND)).addCurrentProjectTooltip(tooltip,
+        // Industry.IndustryTooltipMode.NORMAL);
+    }
+
+    @Override
+    public String getIllegalTransferText(FleetMemberAPI member, TransferAction action) {
+        if (market.hasIndustry(Ids.REVERSE_ENG_1_IND) || market.hasIndustry(Ids.REVERSE_ENG_2_IND)
+                || market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
+
+            if (!market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
+                return "Can not be Reverse Engineered - Ships are allowed in Tier 3.";
+            } else {
+                return "";
+            }
+        }
+
+        return "something broke.";
+    }
+
+    @Override
+    public String getIllegalTransferText(CargoStackAPI stack, SubmarketPlugin.TransferAction action) {
+        if (market.hasIndustry(Ids.REVERSE_ENG_1_IND) || market.hasIndustry(Ids.REVERSE_ENG_2_IND)
+                || market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
+
+            if (market.hasIndustry(Ids.REVERSE_ENG_1_IND)) {
+                if (!stack.isWeaponStack()) {
+                    return "Can not be Reverse Engineered - Only weapons are allowed in Tier 1.";
+                }
+            } else if (market.hasIndustry(Ids.REVERSE_ENG_2_IND) || market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
+                if (!stack.isFighterWingStack() && !stack.isWeaponStack()) {
+                    return "Can not be Reverse Engineered - Only weapons and fighter wings are allowed in Tier 2.";
+                }
+            }
+        }
+
+        return "something broke.";
+    }
+
+    @Override
+    public boolean isIllegalOnSubmarket(CargoStackAPI stack, SubmarketPlugin.TransferAction action) {
+        if (market.hasIndustry(Ids.REVERSE_ENG_1_IND) || market.hasIndustry(Ids.REVERSE_ENG_2_IND)
+                || market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
+
+            if (market.hasIndustry(Ids.REVERSE_ENG_1_IND)) {
+                if (!stack.isWeaponStack()) {
+                    return true;
+                }
+            } else if (market.hasIndustry(Ids.REVERSE_ENG_2_IND) || market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
+                if (!stack.isWeaponStack() && !stack.isFighterWingStack()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean isIllegalOnSubmarket(FleetMemberAPI member, SubmarketPlugin.TransferAction action) {
+        if (market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isIllegalOnSubmarket(String commodityId, SubmarketPlugin.TransferAction action) {
+        return true;
     }
 }

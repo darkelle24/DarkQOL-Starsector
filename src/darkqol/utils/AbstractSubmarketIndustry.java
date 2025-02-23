@@ -3,7 +3,6 @@ package darkqol.utils;
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
 import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
-import com.fs.starfarer.api.impl.campaign.ids.Factions;
 
 public abstract class AbstractSubmarketIndustry extends BaseIndustry {
     protected transient SubmarketAPI saved = null;

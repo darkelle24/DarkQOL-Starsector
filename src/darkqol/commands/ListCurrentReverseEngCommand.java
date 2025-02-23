@@ -15,7 +15,7 @@ public class ListCurrentReverseEngCommand implements BaseCommand {
 
     public ListCurrentReverseEngCommand() {
         super();
-        this.reverseEngProgressList = new SaveOneData<Map<String, Float>>(Ids.REVERSE_ENG_SHIP_MEMORY,
+        this.reverseEngProgressList = new SaveOneData<Map<String, Float>>(Ids.REVERSE_ENG_MEMORY,
                 new HashMap<String, Float>());
     }
 

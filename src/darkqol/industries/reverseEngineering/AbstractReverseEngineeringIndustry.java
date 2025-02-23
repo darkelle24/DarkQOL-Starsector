@@ -21,7 +21,6 @@ import com.fs.starfarer.api.ui.TooltipMakerAPI;
 import com.fs.starfarer.api.util.Misc;
 
 import darkqol.utils.AbstractSubmarketIndustry;
-import darkqol.utils.DailyCycleTracker;
 import darkqol.utils.SaveOneData;
 
 public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubmarketIndustry {
@@ -47,15 +46,12 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
 
     protected T currentReverseEng = null;
 
-    protected DailyCycleTracker dailyCycleTracker;
-
     protected String typeReverse;
     protected String idMemory;
 
     public AbstractReverseEngineeringIndustry(String submarketId, String storageColour, String typeReverse,
             String idMemory) {
         super(submarketId, storageColour);
-        this.dailyCycleTracker = new DailyCycleTracker();
         this.reverseEngProgressList = new SaveOneData<Map<String, Float>>(idMemory, new HashMap<String, Float>());
         this.typeReverse = typeReverse;
         this.idMemory = idMemory;
@@ -63,7 +59,7 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
 
     @Override
     public void advance(float amount) {
-        if (isFunctional() && dailyCycleTracker.newDay()) {
+        if (isFunctional()) {
             onNewDay();
         }
     }
