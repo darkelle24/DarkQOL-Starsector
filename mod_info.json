@@ -9,6 +9,6 @@
     "jars/DarkQOL.jar"
   ],
   "modPlugin": "darkqol.DarkQOLModPlugin",
-  "modThreadId": "YOUR_THREAD_ID",
-  "updateCheckURL": "https://raw.githubusercontent.com/TON_GITHUB/TON_MOD/main/version.json"
+  "modThreadId": "31590",
+  "updateCheckURL": "https://raw.githubusercontent.com/darkelle24/DarkQOL-Starsector/main/version.json"
 }

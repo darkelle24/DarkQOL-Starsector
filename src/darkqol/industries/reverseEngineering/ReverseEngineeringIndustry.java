@@ -37,14 +37,21 @@ public class ReverseEngineeringIndustry extends AbstractSubmarketIndustry {
     public void advance(float amount) {
         if (isFunctional() && dailyCycleTracker.newDay()) {
             if (isPhase3()) {
+                if (reverseEngineeringShipIndustry.getMarket() == null) {
+                    reverseEngineeringShipIndustry.init(id, market);
+                }
                 reverseEngineeringShipIndustry.advance(amount);
             }
-            if (isPhase2()) {
+            if (isPhase2() || isPhase3()) {
+                if (ReverseEngineeringFighterWingIndustry.getMarket() == null) {
+                    ReverseEngineeringFighterWingIndustry.init(id, market);
+                }
                 ReverseEngineeringFighterWingIndustry.advance(amount);
             }
-            if (isPhase1()) {
-                reverseEngineeringWeaponIndustry.advance(amount);
+            if (reverseEngineeringWeaponIndustry.getMarket() == null) {
+                reverseEngineeringWeaponIndustry.init(id, market);
             }
+            reverseEngineeringWeaponIndustry.advance(amount);
         }
     }
 
@@ -75,7 +82,7 @@ public class ReverseEngineeringIndustry extends AbstractSubmarketIndustry {
 
     @Override
     public String getDescriptionOverride() {
-        String toReturn = "As the sector is decaying in knowledge an institution specialized in the disassembly of functional spacecraft is a rare sight, and can only be afforded by the rich or the desperate.\nPlace ships into the storage to reverse engineer them.\nOnce you have achieved 100% progress, you will receive a blueprint.";
+        String toReturn = "As the sector is decaying in knowledge an institution specialized in the disassembly of functional spacecraft is a rare sight, and can only be afforded by the rich or the desperate.\n\nPlace items into the storage to reverse engineer them.\n\nOnce you have achieved 100% progress, you will receive a blueprint.";
 
         toReturn += "\n\n";
         if (isPhase1()) {
@@ -88,6 +95,32 @@ public class ReverseEngineeringIndustry extends AbstractSubmarketIndustry {
         return toReturn;
     }
 
+    @Override
+    public boolean canImprove() {
+        return true;
+    }
+
+    public void setAICoreId(String aiCoreId) {
+        super.setAICoreId(aiCoreId);
+        reverseEngineeringShipIndustry.setAICoreId(aiCoreId);
+        reverseEngineeringWeaponIndustry.setAICoreId(aiCoreId);
+        ReverseEngineeringFighterWingIndustry.setAICoreId(aiCoreId);
+    }
+
+    @Override
+    public void setImproved(boolean improved) {
+        super.setImproved(improved);
+        reverseEngineeringShipIndustry.setImproved(improved);
+        reverseEngineeringWeaponIndustry.setImproved(improved);
+        ReverseEngineeringFighterWingIndustry.setImproved(improved);
+    }
+
+    public void setDisrupted(float days, boolean useMax) {
+        super.setDisrupted(days, useMax);
+        reverseEngineeringShipIndustry.setDisrupted(days, useMax);
+        reverseEngineeringWeaponIndustry.setDisrupted(days, useMax);
+        ReverseEngineeringFighterWingIndustry.setDisrupted(days, useMax);
+    }
 }
 
 class ReverseEngineeringShipIndustry extends AbstractReverseEngineeringIndustry<ShipVariantAPI> {
@@ -96,7 +129,14 @@ class ReverseEngineeringShipIndustry extends AbstractReverseEngineeringIndustry<
     }
 
     protected boolean initDeconstruction() {
-        CargoAPI storage = market.getSubmarket(Ids.REVERSE_ENG_SUB).getCargo();
+        SubmarketAPI sub = market.getSubmarket(Ids.REVERSE_ENG_SUB);
+
+        if (sub == null) {
+            debugLog("Error: SubmarketAPI is null.");
+            return false;
+        }
+
+        CargoAPI storage = sub.getCargo();
         if (storage == null || storage.getMothballedShips() == null) {
             debugLog("Error: CargoAPI or Mothballed ships list is null.");
             return false;
@@ -179,7 +219,14 @@ class ReverseEngineeringWeaponIndustry extends AbstractReverseEngineeringIndustr
 
     @Override
     protected boolean initDeconstruction() {
-        CargoAPI storage = market.getSubmarket(Ids.REVERSE_ENG_SUB).getCargo();
+        SubmarketAPI sub = market.getSubmarket(Ids.REVERSE_ENG_SUB);
+
+        if (sub == null) {
+            debugLog("Error: SubmarketAPI is null.");
+            return false;
+        }
+
+        CargoAPI storage = sub.getCargo();
         if (storage == null || storage.getWeapons() == null) {
             debugLog("Error: CargoAPI or Weapons list is null.");
             return false;
@@ -230,7 +277,14 @@ class ReverseEngineeringFighterWingIndustry extends AbstractReverseEngineeringIn
 
     @Override
     protected boolean initDeconstruction() {
-        CargoAPI storage = market.getSubmarket(Ids.REVERSE_ENG_SUB).getCargo();
+        SubmarketAPI sub = market.getSubmarket(Ids.REVERSE_ENG_SUB);
+
+        if (sub == null) {
+            debugLog("Error: SubmarketAPI is null.");
+            return false;
+        }
+
+        CargoAPI storage = sub.getCargo();
         if (storage == null || storage.getFighters() == null) {
             debugLog("Error: CargoAPI or FighterWing list is null.");
             return false;
