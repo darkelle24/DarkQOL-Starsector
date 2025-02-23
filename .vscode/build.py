@@ -3,6 +3,7 @@ import os
 
 # Charger le fichier settings.json
 settings_path = "./.vscode/settings.json"  # Remplace par le chemin de ton fichier si besoin
+javac_path = r"C:\\Program Files (x86)\\Java\\JDK7\\bin\\javac"
 with open(settings_path, "r", encoding="utf-8") as f:
     print(f"Chargement du fichier {settings_path}")
     settings = json.load(f)
@@ -28,7 +29,7 @@ classpath = ";".join(expanded_libraries)
 # Construire la commande finale
 javac_command = (
     f'del ..\\DarkQOL.rar && '
-    f'javac -d bin -source 8 -target 8 -sourcepath src -cp "{classpath}" src\\darkqol\\*.java && '
+    f'"{javac_path}" -d bin -source 7 -target 7 -sourcepath src -cp "{classpath}" src\\darkqol\\*.java && '
     f'jar cvf jars\\DarkQOL.jar -C bin . && '
     f'"C:\\Program Files\\WinRAR\\Rar.exe" a -r ..\\DarkQOL.rar ./**'
 )

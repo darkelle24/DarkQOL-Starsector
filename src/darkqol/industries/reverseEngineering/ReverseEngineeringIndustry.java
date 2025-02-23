@@ -17,109 +17,66 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import darkqol.ids.Ids;
-import darkqol.utils.AbstractSubmarketIndustry;
-import darkqol.utils.DailyCycleTracker;
+import darkqol.utils.MultiTierIndustry;
 
-public class ReverseEngineeringIndustry extends AbstractSubmarketIndustry {
-
-    protected ReverseEngineeringShipIndustry reverseEngineeringShipIndustry = new ReverseEngineeringShipIndustry();
-    protected ReverseEngineeringWeaponIndustry reverseEngineeringWeaponIndustry = new ReverseEngineeringWeaponIndustry();
-    protected ReverseEngineeringFighterWingIndustry ReverseEngineeringFighterWingIndustry = new ReverseEngineeringFighterWingIndustry();
-
-    private DailyCycleTracker dailyCycleTracker;
+public class ReverseEngineeringIndustry extends MultiTierIndustry {
 
     public ReverseEngineeringIndustry() {
-        super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour");
-        this.dailyCycleTracker = new DailyCycleTracker();
+        super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", false);
+        initializeIndustries();
     }
 
-    @Override
-    public void advance(float amount) {
-        if (isFunctional() && dailyCycleTracker.newDay()) {
-            if (isPhase3()) {
-                if (reverseEngineeringShipIndustry.getMarket() == null) {
-                    reverseEngineeringShipIndustry.init(id, market);
-                }
-                reverseEngineeringShipIndustry.advance(amount);
-            }
-            if (isPhase2() || isPhase3()) {
-                if (ReverseEngineeringFighterWingIndustry.getMarket() == null) {
-                    ReverseEngineeringFighterWingIndustry.init(id, market);
-                }
-                ReverseEngineeringFighterWingIndustry.advance(amount);
-            }
-            if (reverseEngineeringWeaponIndustry.getMarket() == null) {
-                reverseEngineeringWeaponIndustry.init(id, market);
-            }
-            reverseEngineeringWeaponIndustry.advance(amount);
-        }
-    }
-
-    public void addCurrentProjectTooltip(TooltipMakerAPI tooltip, Industry.IndustryTooltipMode mode) {
-        reverseEngineeringShipIndustry.addCurrentProjectTooltip(tooltip, mode);
-    }
-
-    public boolean isPhase1() {
-        if (Ids.REVERSE_ENG_1_IND.equals(getId())) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isPhase2() {
-        if (Ids.REVERSE_ENG_2_IND.equals(getId())) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isPhase3() {
-        if (Ids.REVERSE_ENG_3_IND.equals(getId())) {
-            return true;
-        }
-        return false;
+    private void initializeIndustries() {
+        // Ajout des industries avec des IDs uniques
+        addIndustry(Ids.REVERSE_ENG_1_IND, 1, new ReverseEngineeringWeaponIndustry());
+        addIndustry(Ids.REVERSE_ENG_2_IND, 2, new ReverseEngineeringFighterWingIndustry());
+        addIndustry(Ids.REVERSE_ENG_3_IND, 3, new ReverseEngineeringShipIndustry());
     }
 
     @Override
     public String getDescriptionOverride() {
-        String toReturn = "As the sector is decaying in knowledge an institution specialized in the disassembly of functional spacecraft is a rare sight, and can only be afforded by the rich or the desperate.\n\nPlace items into the storage to reverse engineer them.\n\nOnce you have achieved 100% progress, you will receive a blueprint.";
+        String toReturn = "As the sector is decaying in knowledge, an institution specialized in the disassembly of functional spacecraft is a rare sight, and can only be afforded by the rich or the desperate.\n\nPlace items into the storage to reverse engineer them.\n\nOnce you have achieved 100% progress, you will receive a blueprint.";
 
         toReturn += "\n\n";
-        if (isPhase1()) {
+        if (isTier(1)) {
             toReturn += "Tier 1: Only weapons are allowed.";
-        } else if (isPhase2()) {
+        } else if (isTier(2)) {
             toReturn += "Tier 2: Only weapons and fighter wings are allowed.";
-        } else if (isPhase3()) {
+        } else if (isTier(3)) {
             toReturn += "Tier 3: Weapons, fighter wings, and ships are allowed.";
         }
         return toReturn;
     }
 
     @Override
-    public boolean canImprove() {
-        return true;
+    protected void addRightAfterDescriptionSection(TooltipMakerAPI tooltip, Industry.IndustryTooltipMode mode) {
+        if (isTier(3)) {
+            ReverseEngineeringShipIndustry shipIndustry = (ReverseEngineeringShipIndustry) getIndustryById(
+                    Ids.REVERSE_ENG_3_IND);
+            if (shipIndustry != null) {
+                shipIndustry.addRightAfterDescriptionSection(tooltip, mode);
+            }
+        }
+        if (isTier(2) || isTier(3)) {
+            ReverseEngineeringFighterWingIndustry fighterWingIndustry = (ReverseEngineeringFighterWingIndustry) getIndustryById(
+                    Ids.REVERSE_ENG_2_IND);
+            if (fighterWingIndustry != null) {
+                fighterWingIndustry.addRightAfterDescriptionSection(tooltip, mode);
+            }
+        }
+        ReverseEngineeringWeaponIndustry weaponIndustry = (ReverseEngineeringWeaponIndustry) getIndustryById(
+                Ids.REVERSE_ENG_1_IND);
+        if (weaponIndustry != null) {
+            weaponIndustry.addRightAfterDescriptionSection(tooltip, mode);
+        }
     }
 
-    public void setAICoreId(String aiCoreId) {
-        super.setAICoreId(aiCoreId);
-        reverseEngineeringShipIndustry.setAICoreId(aiCoreId);
-        reverseEngineeringWeaponIndustry.setAICoreId(aiCoreId);
-        ReverseEngineeringFighterWingIndustry.setAICoreId(aiCoreId);
-    }
-
-    @Override
-    public void setImproved(boolean improved) {
-        super.setImproved(improved);
-        reverseEngineeringShipIndustry.setImproved(improved);
-        reverseEngineeringWeaponIndustry.setImproved(improved);
-        ReverseEngineeringFighterWingIndustry.setImproved(improved);
-    }
-
-    public void setDisrupted(float days, boolean useMax) {
-        super.setDisrupted(days, useMax);
-        reverseEngineeringShipIndustry.setDisrupted(days, useMax);
-        reverseEngineeringWeaponIndustry.setDisrupted(days, useMax);
-        ReverseEngineeringFighterWingIndustry.setDisrupted(days, useMax);
+    public void addCurrentProjectTooltip(TooltipMakerAPI tooltip, Industry.IndustryTooltipMode mode) {
+        ReverseEngineeringShipIndustry shipIndustry = (ReverseEngineeringShipIndustry) getIndustryById(
+                Ids.REVERSE_ENG_3_IND);
+        if (shipIndustry != null) {
+            shipIndustry.addCurrentProjectTooltip(tooltip, mode);
+        }
     }
 }
 
