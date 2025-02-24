@@ -28,7 +28,7 @@ public class ReverseEngineeringIndustry extends MultiTierIndustry {
     private DailyCycleTracker dailyCycleTracker;
 
     public ReverseEngineeringIndustry() {
-        super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", false);
+        super(Ids.REVERSE_ENG_SUB, "darkReverseEngHubStorageColour", false);
         this.dailyCycleTracker = new DailyCycleTracker();
         initializeIndustries();
     }
@@ -46,7 +46,7 @@ public class ReverseEngineeringIndustry extends MultiTierIndustry {
 
     @Override
     public String getDescriptionOverride() {
-        String toReturn = "As the sector is decaying in knowledge, an institution specialized in the disassembly of functional spacecraft is a rare sight, and can only be afforded by the rich or the desperate.\n\nPlace items into the storage to reverse engineer them.\n\nOnce you have achieved 100% progress, you will receive a blueprint.";
+        String toReturn = "A high-tech facility dedicated to analyzing and reproducing advanced technology through reverse engineering. By deconstructing recovered items, it allows for the creation of blueprints to expand your faction's capabilities.\n\nPlace items into the storage to reverse engineer them.\n\nOnce you have achieved 100% progress, you will receive a blueprint.";
 
         toReturn += "\n\n";
         if (isTier(1)) {
@@ -186,7 +186,7 @@ public class ReverseEngineeringIndustry extends MultiTierIndustry {
 
 class ReverseEngineeringShipIndustry extends AbstractReverseEngineeringIndustry<ShipVariantAPI> {
     public ReverseEngineeringShipIndustry() {
-        super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", "ship", Ids.REVERSE_ENG_MEMORY);
+        super(Ids.REVERSE_ENG_SUB, "darkReverseEngHubStorageColour", "ship", Ids.REVERSE_ENG_MEMORY);
     }
 
     @Override
@@ -306,7 +306,7 @@ class ReverseEngineeringShipIndustry extends AbstractReverseEngineeringIndustry<
 class ReverseEngineeringWeaponIndustry extends AbstractReverseEngineeringIndustry<WeaponSpecAPI> {
 
     public ReverseEngineeringWeaponIndustry() {
-        super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", "weapon", Ids.REVERSE_ENG_MEMORY);
+        super(Ids.REVERSE_ENG_SUB, "darkReverseEngHubStorageColour", "weapon", Ids.REVERSE_ENG_MEMORY);
     }
 
     @Override
@@ -378,7 +378,7 @@ class ReverseEngineeringWeaponIndustry extends AbstractReverseEngineeringIndustr
 class ReverseEngineeringFighterWingIndustry extends AbstractReverseEngineeringIndustry<FighterWingSpecAPI> {
 
     public ReverseEngineeringFighterWingIndustry() {
-        super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", "fighter wing", Ids.REVERSE_ENG_MEMORY);
+        super(Ids.REVERSE_ENG_SUB, "darkReverseEngHubStorageColour", "fighter wing", Ids.REVERSE_ENG_MEMORY);
     }
 
     @Override

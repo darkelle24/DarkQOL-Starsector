@@ -187,7 +187,7 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
                 Misc.getHighlightColor(),
                 new String[] { Math.round(progressShow * 100) + "%" });
 
-        intel.setIcon(Global.getSettings().getSpriteName("DarkQOL", "revBP"));
+        intel.setIcon(Global.getSettings().getSpriteName("DarkQOL", "notif"));
         Global.getSector().getCampaignUI().addMessage(intel);
         intel.setSound(BaseIntelPlugin.getSoundMinorMessage());
     }

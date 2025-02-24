@@ -1,3 +1,3 @@
 id,name,faction,desc,script,icon,order
 Dark_PrivateArsenalSub,Private Arsenal,player,A specialized market where the player can purchase all unlocked weapons and fighters at a premium price.,darkqol.submarkets.PrivateArsenalSubmarketPlugin,graphics/factions/player_weapon_market.png,1150
-Dark_ReversEngSub,"Reverse Engineering Storage",player,"Deposit ships / weapons / wing for disassembly here, to gain progress on the research of a blueprint.",darkqol.submarkets.ReverseEngineeringSubmarketPlugin,graphics/factions/reverseEngineering.png,1200
+Dark_ReversEngSub,"Reverse Engineering Storage",player,"Deposit ships / weapons / wing for disassembly here, to gain progress on the research of a blueprint.",darkqol.submarkets.ReverseEngineeringSubmarketPlugin,graphics/factions/eng_store.png,1200
