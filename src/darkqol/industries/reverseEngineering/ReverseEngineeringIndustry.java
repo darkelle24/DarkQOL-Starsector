@@ -292,7 +292,7 @@ class ReverseEngineeringFighterWingIndustry extends AbstractReverseEngineeringIn
 
     @Override
     protected int getDayRequired() {
-        return 2;
+        return 20;
     }
 
     @Override
@@ -352,6 +352,6 @@ class ReverseEngineeringFighterWingIndustry extends AbstractReverseEngineeringIn
     }
 
     protected SpecialItemData getSpecialItem(String id) {
-        return new SpecialItemData("wing_bp", id);
+        return new SpecialItemData("fighter_bp", id);
     }
 }
