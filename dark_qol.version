@@ -1,0 +1,12 @@
+{
+    "modVersion": {
+        "major": 2,
+        "minor": 0,
+        "patch": 0
+    },
+    "modName": "Dark QOL",
+    "modThreadId": 31590,
+    "starsectorVersion":"0.97a-RC11",
+    "masterVersionFile": "https://github.com/darkelle24/DarkQOL-Starsector",
+    "directDownloadURL": "https://github.com/darkelle24/DarkQOL-Starsector/releases/latest/download/DarkQOL.rar"
+}

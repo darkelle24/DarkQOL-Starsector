@@ -1,31 +1,31 @@
 package darkqol.industries;
 
-import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
+import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
 
 import darkqol.ids.Ids;
+import darkqol.submarkets.PrivateArsenalSubmarketPlugin;
+import darkqol.utils.AbstractSubmarketIndustry;
 
-public class PrivateArsenalIndustry extends BaseIndustry {
+public class PrivateArsenalIndustry extends AbstractSubmarketIndustry {
 
-    @Override
-    public void apply() {
-        super.apply(true);
-
-        if (market.isPlayerOwned() && !market.hasSubmarket(Ids.PRIVATE_ARSENAL_SUB)) {
-            market.addSubmarket(Ids.PRIVATE_ARSENAL_SUB);
-        }
-    }
-
-    @Override
-    public void unapply() {
-        super.unapply();
-
-        if (market.hasSubmarket(Ids.PRIVATE_ARSENAL_SUB)) {
-            market.removeSubmarket(Ids.PRIVATE_ARSENAL_SUB);
-        }
+    public PrivateArsenalIndustry() {
+        super(Ids.PRIVATE_ARSENAL_SUB, "darkPlayerWeaponShopColor");
     }
 
     @Override
     public boolean isAvailableToBuild() {
         return market.isPlayerOwned(); // Seulement le joueur peut le construire
+    }
+
+    @Override
+    public void apply() {
+        super.apply();
+        if (isFunctional() && market.isPlayerOwned()) {
+            SubmarketAPI open = market.getSubmarket(submarketId);
+            if (open != null) {
+                PrivateArsenalSubmarketPlugin plugin = (PrivateArsenalSubmarketPlugin) open.getPlugin();
+                plugin.refreshMarketStock();
+            }
+        }
     }
 }

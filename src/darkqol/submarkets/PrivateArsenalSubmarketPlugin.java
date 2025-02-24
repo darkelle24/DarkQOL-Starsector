@@ -4,21 +4,20 @@ import java.util.Set;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
-import com.fs.starfarer.api.impl.campaign.submarkets.BaseSubmarketPlugin;
 import com.fs.starfarer.api.loading.FighterWingSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import darkqol.ids.Ids;
+import darkqol.utils.DarkBaseSubmarketPlugin;
 
-public class PrivateArsenalSubmarketPlugin extends BaseSubmarketPlugin {
+public class PrivateArsenalSubmarketPlugin extends DarkBaseSubmarketPlugin {
 
     private boolean isActive = false;
 
     @Override
     public void init(SubmarketAPI submarket) {
         super.init(submarket);
-        this.submarket.setFaction(Global.getSector().getFaction("darkPlayerWeaponShopColor"));
     }
 
     @Override
@@ -35,7 +34,7 @@ public class PrivateArsenalSubmarketPlugin extends BaseSubmarketPlugin {
         }
     }
 
-    private void refreshMarketStock() {
+    public void refreshMarketStock() {
         getCargo().clear();
         addUnlockedWeapons();
         addUnlockedFighters();
