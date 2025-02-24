@@ -37,7 +37,7 @@ public class ReverseEngineeringSubmarketPlugin extends DarkBaseSubmarketPlugin {
 
     @Override
     public String getDesc() {
-        String toReturn = "Deposit ships / weapons / wing for disassembly here, to gain progress on the research of a blueprint.";
+        String toReturn = "Deposit ships / weapons / wing for analysis here, to gain progress on the reverse engineering of the item.";
         toReturn += "\n\n";
         if (market.hasIndustry(Ids.REVERSE_ENG_1_IND)) {
             toReturn += "Tier 1: Only weapons are allowed.";
