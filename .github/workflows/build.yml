@@ -1,4 +1,4 @@
-name: Build and Release PlayerWeaponShop
+name: Build and Release DarkQOL
 
 on:
   workflow_dispatch:  # Permet de lancer l'action manuellement
@@ -25,9 +25,9 @@ jobs:
 
       - name: Create RAR Archive
         run: |
-          mkdir -p PlayerWeaponShop
-          cp -r data graphics jars mod_info.json PlayerWeaponShop/ 
-          rar a -r PlayerWeaponShop.rar PlayerWeaponShop/
+          mkdir -p DarkQOL
+          cp -r data graphics jars mod_info.json DarkQOL/ 
+          rar a -r DarkQOL.rar DarkQOL/
 
       - name: Read mod version
         id: mod_version
@@ -66,17 +66,17 @@ jobs:
         if: github.ref == 'refs/heads/main'
         with:
           tag_name: v${{ steps.increment_version.outputs.version || steps.mod_version.outputs.version }}
-          name: PlayerWeaponShop Release v${{ steps.increment_version.outputs.version || steps.mod_version.outputs.version }}
-          body: "Automated release of PlayerWeaponShop mod."
+          name: DarkQOL Release v${{ steps.increment_version.outputs.version || steps.mod_version.outputs.version }}
+          body: "Automated release of DarkQOL mod."
           draft: false
           prerelease: false
-          files: PlayerWeaponShop.rar
+          files: DarkQOL.rar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Artifact (RAR)
         uses: actions/upload-artifact@v4
         with:
-          name: PlayerWeaponShop
-          path: PlayerWeaponShop.rar
+          name: DarkQOL
+          path: DarkQOL.rar
           retention-days: 7  # Supprime l'artefact après 7 jours
