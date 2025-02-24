@@ -5,13 +5,14 @@
 ### 1. Add Different Tiers for the Reverse Engineering Building
 
 - [x] Define tiers (Tier 1, Tier 2, Tier 3).
-- [ ] Add unique effects or bonuses for each tier.
-- [ ] Ensure higher tiers unlock new functionalities or improve existing ones.
+- [x] Add unique effects or bonuses for each tier.
+- [x] Ensure higher tiers unlock new functionalities or improve existing ones.
+- [ ] Save progression when upgrading or downgrading the building.
 
 ### 2. Adjust Reverse Time Based on Item Type (Weapons, Wings, Ships)
 
-- [ ] Define base reverse times for each item type.
-- [ ] Implement a system to adjust reverse time based on the item type.
+- [x] Define base reverse times for each item type.
+- [x] Implement a system to adjust reverse time based on the item type.
 
 ### 3. Adjust Reverse Time Based on Ship Size
 
@@ -21,9 +22,9 @@
 
 ### 4. Manage AI Time Reduction Using Percentages Instead of Raw Values
 
-- [ ] Replace the current raw value system with percentages.
-- [ ] Define percentage reductions based on AI level.
-- [ ] Implement the final reverse time calculation using percentages.
+- [x] Replace the current raw value system with percentages.
+- [x] Define percentage reductions based on AI level.
+- [x] Implement the final reverse time calculation using percentages.
 
 ### 5. Add Tier-Based Error Messages for Items
 

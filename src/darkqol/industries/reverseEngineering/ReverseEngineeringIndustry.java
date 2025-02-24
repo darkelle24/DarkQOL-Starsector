@@ -17,13 +17,21 @@ import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
 
 import darkqol.ids.Ids;
+import darkqol.utils.DailyCycleTracker;
 import darkqol.utils.MultiTierIndustry;
 
 public class ReverseEngineeringIndustry extends MultiTierIndustry {
 
+    private DailyCycleTracker dailyCycleTracker;
+
     public ReverseEngineeringIndustry() {
         super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", false);
+        this.dailyCycleTracker = new DailyCycleTracker();
         initializeIndustries();
+    }
+
+    public boolean conditionToAdvance(float amount) {
+        return dailyCycleTracker.newDay();
     }
 
     private void initializeIndustries() {
@@ -78,11 +86,24 @@ public class ReverseEngineeringIndustry extends MultiTierIndustry {
             shipIndustry.addCurrentProjectTooltip(tooltip, mode);
         }
     }
+
+    @Override
+    public boolean canImprove() {
+        return true;
+    }
 }
 
 class ReverseEngineeringShipIndustry extends AbstractReverseEngineeringIndustry<ShipVariantAPI> {
     public ReverseEngineeringShipIndustry() {
         super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", "ship", Ids.REVERSE_ENG_MEMORY);
+    }
+
+    @Override
+    protected String getSprite() {
+        if (currentReverseEng == null) {
+            return "";
+        }
+        return currentReverseEng.getHullSpec().getSpriteName();
     }
 
     protected boolean initDeconstruction() {
@@ -114,6 +135,28 @@ class ReverseEngineeringShipIndustry extends AbstractReverseEngineeringIndustry<
             }
         }
         return false;
+    }
+
+    @Override
+    protected float getReductionFactor() {
+        if (currentReverseEng == null) {
+            return 1.0f;
+        }
+
+        String hullSize = currentReverseEng.getHullSize().toString();
+
+        switch (hullSize) {
+            case "FRIGATE":
+                return 1.0f;
+            case "DESTROYER":
+                return 1.25f;
+            case "CRUISER":
+                return 1.5f;
+            case "CAPITAL_SHIP":
+                return 2f;
+            default:
+                return 1.0f;
+        }
     }
 
     public void transferWeaponsAndWingsToStorage(FleetMemberAPI fleetMember) {
@@ -170,8 +213,22 @@ class ReverseEngineeringShipIndustry extends AbstractReverseEngineeringIndustry<
 }
 
 class ReverseEngineeringWeaponIndustry extends AbstractReverseEngineeringIndustry<WeaponSpecAPI> {
+
     public ReverseEngineeringWeaponIndustry() {
         super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", "weapon", Ids.REVERSE_ENG_MEMORY);
+    }
+
+    @Override
+    protected int getDayRequired() {
+        return 10;
+    }
+
+    @Override
+    protected String getSprite() {
+        if (currentReverseEng == null) {
+            return "";
+        }
+        return currentReverseEng.getTurretSpriteName();
     }
 
     @Override
@@ -228,8 +285,22 @@ class ReverseEngineeringWeaponIndustry extends AbstractReverseEngineeringIndustr
 }
 
 class ReverseEngineeringFighterWingIndustry extends AbstractReverseEngineeringIndustry<FighterWingSpecAPI> {
+
     public ReverseEngineeringFighterWingIndustry() {
-        super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", "fighter_wing", Ids.REVERSE_ENG_MEMORY);
+        super(Ids.REVERSE_ENG_SUB, "darkEngHubStorageColour", "fighter wing", Ids.REVERSE_ENG_MEMORY);
+    }
+
+    @Override
+    protected int getDayRequired() {
+        return 2;
+    }
+
+    @Override
+    protected String getSprite() {
+        if (currentReverseEng == null) {
+            return "";
+        }
+        return currentReverseEng.getVariant().getHullSpec().getSpriteName();
     }
 
     @Override

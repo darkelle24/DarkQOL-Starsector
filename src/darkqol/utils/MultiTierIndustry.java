@@ -8,12 +8,13 @@ import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
 
 public abstract class MultiTierIndustry extends AbstractSubmarketIndustry {
 
-    private Map<String, IndustryInfo> industriesMap = new HashMap<>();
+    private Map<String, IndustryInfo> industriesMap;
     private boolean activateOnlyCurrentTier;
 
     public MultiTierIndustry(String id, String storageColour, boolean activateOnlyCurrentTier) {
         super(id, storageColour);
         this.activateOnlyCurrentTier = activateOnlyCurrentTier;
+        industriesMap = new HashMap<>();
     }
 
     protected void addIndustry(String id, int tier, BaseIndustry industry) {
@@ -21,10 +22,9 @@ public abstract class MultiTierIndustry extends AbstractSubmarketIndustry {
     }
 
     public boolean isTier(int tierNumber) {
-        for (IndustryInfo info : industriesMap.values()) {
-            if (info.getTier() == tierNumber) {
-                return true;
-            }
+        if (industriesMap.containsKey(getId())) {
+            IndustryInfo info = industriesMap.get(getId());
+            return info.getTier() == tierNumber;
         }
         return false;
     }

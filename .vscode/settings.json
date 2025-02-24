@@ -16,5 +16,5 @@
     "java.format.settings.organizeImports": true,
     "editor.codeActionsOnSave": {
         "source.organizeImports": "explicit"
-    }
+    },
 }

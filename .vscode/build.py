@@ -1,4 +1,4 @@
-import json
+import json5
 import os
 
 # Charger le fichier settings.json
@@ -6,7 +6,7 @@ settings_path = "./.vscode/settings.json"  # Remplace par le chemin de ton fichi
 javac_path = r"C:\\Program Files (x86)\\Java\\JDK7\\bin\\javac"
 with open(settings_path, "r", encoding="utf-8") as f:
     print(f"Chargement du fichier {settings_path}")
-    settings = json.load(f)
+    settings = json5.load(f)
 
 # Extraire les chemins des bibliothèques
 libraries = settings.get("java.project.referencedLibraries", [])

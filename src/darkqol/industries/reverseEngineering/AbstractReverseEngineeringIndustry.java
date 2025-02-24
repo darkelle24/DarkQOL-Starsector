@@ -26,21 +26,21 @@ import darkqol.utils.SaveOneData;
 public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubmarketIndustry {
     public static final Logger log = Global.getLogger(AbstractReverseEngineeringIndustry.class);
 
-    protected int NUMBER_REVERSE_TO_GET_BP = 5;
-    protected int NUMBER_GET_BY_REVERSE = 1;
-    protected int DAY_REQUIRED = 30;
+    protected final int NUMBER_REVERSE_TO_GET_BP = 5;
+    protected final int NUMBER_GET_BY_REVERSE = 1;
+    protected final int DAY_REQUIRED = 30;
     protected boolean DEBUG_MODE = true;
 
-    private int AI_ALPHA_DAYREQUIRED_SUB = 15;
-    private int AI_BETA_DAYREQUIRED_SUB = 10;
-    private int AI_GAMMA_DAYREQUIRED_SUB = 5;
-    private int IMPROVE_DAYREQUIRED_SUB = 10;
+    protected final float AI_ALPHA_DAYREQUIRED_REDUCTION = 0.40f;
+    protected final float AI_BETA_DAYREQUIRED_REDUCTION = 0.20f;
+    protected final float AI_GAMMA_DAYREQUIRED_REDUCTION = 0.10f;
+    protected final float IMPROVE_DAYREQUIRED_REDUCTION = 0.10f;
 
-    private int AI_ALPHA_RESEARCH_ADVANCE_ADD = 2;
-    private int AI_BETA_RESEARCH_ADVANCE_ADD = 1;
-    private int IMPROVE_RESEARCH_ADVANCE_ADD = 2;
+    protected final int AI_ALPHA_RESEARCH_ADVANCE_ADD = 2;
+    protected final int AI_BETA_RESEARCH_ADVANCE_ADD = 1;
+    protected final int IMPROVE_RESEARCH_ADVANCE_ADD = 2;
 
-    protected int daysRequired = DAY_REQUIRED;
+    protected int daysRequired = getDayRequired();
     protected int daysPassed = 0;
     protected SaveOneData<Map<String, Float>> reverseEngProgressList;
 
@@ -64,11 +64,17 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
         }
     }
 
+    protected int getDayRequired() {
+        return DAY_REQUIRED;
+    }
+
     protected abstract boolean initDeconstruction();
 
     protected abstract String getNameReverse();
 
     protected abstract String getIdReverse();
+
+    protected abstract String getSprite();
 
     protected abstract SpecialItemData getSpecialItem(String id); // blueprint = new SpecialItemData("ship_bp", hullId);
                                                                   // // weapon_bp wing_bp
@@ -95,23 +101,32 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
         }
     }
 
+    protected float getReductionFactor() {
+        return 1.0f;
+    }
+
     private void refreshRequiredDays() {
         if (currentReverseEng != null) {
-            daysRequired = DAY_REQUIRED;
+            daysRequired = (int) (getDayRequired() * getReductionFactor());
+
+            float reductionPercentage = 0f;
+
             switch (getAiCoreIdNotNull()) {
                 case Commodities.GAMMA_CORE:
-                    daysRequired -= AI_GAMMA_DAYREQUIRED_SUB;
+                    reductionPercentage += AI_GAMMA_DAYREQUIRED_REDUCTION;
                     break;
                 case Commodities.BETA_CORE:
-                    daysRequired -= AI_BETA_DAYREQUIRED_SUB;
+                    reductionPercentage += AI_BETA_DAYREQUIRED_REDUCTION;
                     break;
                 case Commodities.ALPHA_CORE:
-                    daysRequired -= AI_ALPHA_DAYREQUIRED_SUB;
+                    reductionPercentage += AI_ALPHA_DAYREQUIRED_REDUCTION;
                     break;
             }
             if (isImproved()) {
-                daysRequired -= IMPROVE_DAYREQUIRED_SUB;
+                reductionPercentage += IMPROVE_DAYREQUIRED_REDUCTION;
             }
+
+            daysRequired = (int) (daysRequired * (1 - reductionPercentage));
         }
     }
 
@@ -122,12 +137,21 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
 
     private void notifyDeconstructionStart() {
         String name = getNameReverse();
-        Global.getSector().getCampaignUI().addMessage("Reverse engineering has begun for a %s at %s.",
-                Global.getSettings().getColor("standardTextColor"), name, market.getName(),
-                Misc.getHighlightColor(), market.getFaction().getBrightUIColor());
+        String marketName = market.getName();
+        int requiredDays = daysRequired;
+
+        Global.getSector().getCampaignUI().addMessage(
+                String.format("Reverse engineering has begun for a %s at %s. Required days: %s", name, marketName,
+                        requiredDays),
+                Global.getSettings().getColor("standardTextColor"),
+                name,
+                marketName,
+                Misc.getHighlightColor(),
+                market.getFaction().getBrightUIColor());
     }
 
     private void continueDeconstruction() {
+        refreshRequiredDays();
         debugLog("Deconstruction of " + getNameReverse() + " in progress. " + daysPassed + " days passed out of "
                 + daysRequired);
         daysPassed++;
@@ -145,7 +169,7 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
     }
 
     private void resetDeconstructionVariables() {
-        daysRequired = DAY_REQUIRED;
+        daysRequired = getDayRequired();
         daysPassed = 0;
         currentReverseEng = null;
     }
@@ -264,13 +288,15 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
     }
 
     public void addCurrentProjectTooltip(TooltipMakerAPI tooltip, Industry.IndustryTooltipMode mode) {
-        if (!isBuilding() && isFunctional() && mode.equals(Industry.IndustryTooltipMode.NORMAL)) {
+        if (getMarket() != null && !isBuilding() && isFunctional()
+                && mode.equals(Industry.IndustryTooltipMode.NORMAL)) {
             FactionAPI faction = market.getFaction();
-            tooltip.addSectionHeading("Current Project", faction.getBaseUIColor(), faction.getDarkUIColor(),
+            tooltip.addSectionHeading("Current Project " + typeReverse, faction.getBaseUIColor(),
+                    faction.getDarkUIColor(),
                     Alignment.MID, 10f);
 
             if (currentReverseEng != null) {
-                TooltipMakerAPI text = tooltip.beginImageWithText(getNameReverse(), 48);
+                TooltipMakerAPI text = tooltip.beginImageWithText(getSprite(), 48);
                 text.addPara("Reverse engineering: %s. Time remaining: %s days.", 5f, Misc.getHighlightColor(),
                         getNameReverse(),
                         String.valueOf(daysRequired - daysPassed));
@@ -282,7 +308,7 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
     }
 
     protected void addCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode, String coreLevel,
-            int dayReduction, int researchAdvance) {
+            float dayReductionPercentage, int researchAdvance) {
         float opad = 10.0F;
         Color highlight = Misc.getHighlightColor();
         String pre = coreLevel + "-level AI core currently assigned. ";
@@ -293,20 +319,22 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
         if (mode != AICoreDescriptionMode.INDUSTRY_TOOLTIP && mode != AICoreDescriptionMode.MANAGE_CORE_TOOLTIP) {
             tooltip.addPara(
                     pre + "Reduces upkeep cost by %s. " +
-                            "Reduces research time by %s days. " +
+                            "Reduces research time by %s%%. " +
                             "Advances research progress by %s points.",
                     opad, highlight,
-                    new String[] { (int) ((1.0F - UPKEEP_MULT) * 100.0F) + "%", "" + dayReduction,
+                    new String[] { (int) ((1.0F - UPKEEP_MULT) * 100.0F) + "%",
+                            "" + (int) (dayReductionPercentage * 100),
                             "" + researchAdvance });
         } else {
             CommoditySpecAPI coreSpec = Global.getSettings().getCommoditySpec(this.aiCoreId);
             TooltipMakerAPI text = tooltip.beginImageWithText(coreSpec.getIconName(), 48.0F);
             text.addPara(
                     pre + "Reduces upkeep cost by %s. " +
-                            "Reduces research time by %s days. " +
+                            "Reduces research time by %s%%. " +
                             "Advances research progress by %s points.",
                     0.0F, highlight,
-                    new String[] { (int) ((1.0F - UPKEEP_MULT) * 100.0F) + "%", "" + dayReduction,
+                    new String[] { (int) ((1.0F - UPKEEP_MULT) * 100.0F) + "%",
+                            "" + (int) (dayReductionPercentage * 100),
                             "" + researchAdvance });
             tooltip.addImageWithText(opad);
         }
@@ -314,17 +342,17 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
 
     @Override
     protected void addAlphaCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode) {
-        addCoreDescription(tooltip, mode, "Alpha", AI_ALPHA_DAYREQUIRED_SUB, AI_ALPHA_RESEARCH_ADVANCE_ADD);
+        addCoreDescription(tooltip, mode, "Alpha", AI_ALPHA_DAYREQUIRED_REDUCTION, AI_ALPHA_RESEARCH_ADVANCE_ADD);
     }
 
     @Override
     protected void addBetaCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode) {
-        addCoreDescription(tooltip, mode, "Beta", AI_BETA_DAYREQUIRED_SUB, AI_BETA_RESEARCH_ADVANCE_ADD);
+        addCoreDescription(tooltip, mode, "Beta", AI_BETA_DAYREQUIRED_REDUCTION, AI_BETA_RESEARCH_ADVANCE_ADD);
     }
 
     @Override
     protected void addGammaCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode) {
-        addCoreDescription(tooltip, mode, "Gamma", AI_GAMMA_DAYREQUIRED_SUB, 0);
+        addCoreDescription(tooltip, mode, "Gamma", AI_GAMMA_DAYREQUIRED_REDUCTION, 0);
     }
 
     @Override
@@ -338,13 +366,13 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
         Color highlight = Misc.getHighlightColor();
 
         if (mode == ImprovementDescriptionMode.INDUSTRY_TOOLTIP) {
-            info.addPara("Reduces research time by %s days. " +
+            info.addPara("Reduces research time by %s%%. " +
                     "Advances research progress by %s points.",
-                    0f, highlight, "" + IMPROVE_DAYREQUIRED_SUB, "" + IMPROVE_RESEARCH_ADVANCE_ADD);
+                    0f, highlight, "" + (int) (0.10f * 100), "" + IMPROVE_RESEARCH_ADVANCE_ADD);
         } else {
-            info.addPara("Reduces research time by %s days. " +
+            info.addPara("Reduces research time by %s%%. " +
                     "Advances research progress by %s points.",
-                    0f, highlight, "" + IMPROVE_DAYREQUIRED_SUB, "" + IMPROVE_RESEARCH_ADVANCE_ADD);
+                    0f, highlight, "" + (int) (0.10f * 100), "" + IMPROVE_RESEARCH_ADVANCE_ADD);
         }
 
         info.addSpacer(opad);
