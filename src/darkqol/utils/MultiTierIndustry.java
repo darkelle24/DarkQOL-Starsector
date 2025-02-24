@@ -3,10 +3,14 @@ package darkqol.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.SpecialItemData;
 import com.fs.starfarer.api.impl.campaign.econ.impl.BaseIndustry;
 
 public abstract class MultiTierIndustry extends AbstractSubmarketIndustry {
+    public static final Logger log = Global.getLogger(MultiTierIndustry.class);
 
     private Map<String, IndustryInfo> industriesMap;
     private boolean activateOnlyCurrentTier;
@@ -21,12 +25,30 @@ public abstract class MultiTierIndustry extends AbstractSubmarketIndustry {
         industriesMap.put(id, new IndustryInfo(tier, industry));
     }
 
+    public Map<String, IndustryInfo> getIndustriesMap() {
+        return industriesMap;
+    }
+
+    public void setIndustriesMap(Map<String, IndustryInfo> ind) {
+        this.industriesMap = ind;
+    }
+
     public boolean isTier(int tierNumber) {
         if (industriesMap.containsKey(getId())) {
             IndustryInfo info = industriesMap.get(getId());
             return info.getTier() == tierNumber;
         }
         return false;
+    }
+
+    @Override
+    public void finishBuildingOrUpgrading() {
+        super.finishBuildingOrUpgrading();
+
+        if (this.upgradeId != null) {
+            MultiTierIndustry industry = (MultiTierIndustry) this.market.getIndustry(this.upgradeId);
+            industry.setIndustriesMap(this.industriesMap);
+        }
     }
 
     public BaseIndustry getIndustryById(String id) {

@@ -1,6 +1,5 @@
 package darkqol.industries.reverseEngineering;
 
-import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.FactionAPI;
 import com.fs.starfarer.api.campaign.SpecialItemData;
-import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
 import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.impl.campaign.ids.Commodities;
 import com.fs.starfarer.api.impl.campaign.ids.Submarkets;
@@ -89,6 +87,10 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
         } else {
             continueDeconstruction();
         }
+    }
+
+    public T getCurrentReverseEng() {
+        return currentReverseEng;
     }
 
     private void startNewDeconstruction() {
@@ -307,75 +309,8 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
         }
     }
 
-    protected void addCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode, String coreLevel,
-            float dayReductionPercentage, int researchAdvance) {
-        float opad = 10.0F;
-        Color highlight = Misc.getHighlightColor();
-        String pre = coreLevel + "-level AI core currently assigned. ";
-        if (mode == AICoreDescriptionMode.MANAGE_CORE_DIALOG_LIST || mode == AICoreDescriptionMode.INDUSTRY_TOOLTIP) {
-            pre = coreLevel + "-level AI core. ";
-        }
-
-        if (mode != AICoreDescriptionMode.INDUSTRY_TOOLTIP && mode != AICoreDescriptionMode.MANAGE_CORE_TOOLTIP) {
-            tooltip.addPara(
-                    pre + "Reduces upkeep cost by %s. " +
-                            "Reduces research time by %s%%. " +
-                            "Advances research progress by %s points.",
-                    opad, highlight,
-                    new String[] { (int) ((1.0F - UPKEEP_MULT) * 100.0F) + "%",
-                            "" + (int) (dayReductionPercentage * 100),
-                            "" + researchAdvance });
-        } else {
-            CommoditySpecAPI coreSpec = Global.getSettings().getCommoditySpec(this.aiCoreId);
-            TooltipMakerAPI text = tooltip.beginImageWithText(coreSpec.getIconName(), 48.0F);
-            text.addPara(
-                    pre + "Reduces upkeep cost by %s. " +
-                            "Reduces research time by %s%%. " +
-                            "Advances research progress by %s points.",
-                    0.0F, highlight,
-                    new String[] { (int) ((1.0F - UPKEEP_MULT) * 100.0F) + "%",
-                            "" + (int) (dayReductionPercentage * 100),
-                            "" + researchAdvance });
-            tooltip.addImageWithText(opad);
-        }
-    }
-
-    @Override
-    protected void addAlphaCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode) {
-        addCoreDescription(tooltip, mode, "Alpha", AI_ALPHA_DAYREQUIRED_REDUCTION, AI_ALPHA_RESEARCH_ADVANCE_ADD);
-    }
-
-    @Override
-    protected void addBetaCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode) {
-        addCoreDescription(tooltip, mode, "Beta", AI_BETA_DAYREQUIRED_REDUCTION, AI_BETA_RESEARCH_ADVANCE_ADD);
-    }
-
-    @Override
-    protected void addGammaCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode) {
-        addCoreDescription(tooltip, mode, "Gamma", AI_GAMMA_DAYREQUIRED_REDUCTION, 0);
-    }
-
     @Override
     public boolean canImprove() {
         return true;
-    }
-
-    @Override
-    public void addImproveDesc(TooltipMakerAPI info, ImprovementDescriptionMode mode) {
-        float opad = 10f;
-        Color highlight = Misc.getHighlightColor();
-
-        if (mode == ImprovementDescriptionMode.INDUSTRY_TOOLTIP) {
-            info.addPara("Reduces research time by %s%%. " +
-                    "Advances research progress by %s points.",
-                    0f, highlight, "" + (int) (0.10f * 100), "" + IMPROVE_RESEARCH_ADVANCE_ADD);
-        } else {
-            info.addPara("Reduces research time by %s%%. " +
-                    "Advances research progress by %s points.",
-                    0f, highlight, "" + (int) (0.10f * 100), "" + IMPROVE_RESEARCH_ADVANCE_ADD);
-        }
-
-        info.addSpacer(opad);
-        super.addImproveDesc(info, mode);
     }
 }

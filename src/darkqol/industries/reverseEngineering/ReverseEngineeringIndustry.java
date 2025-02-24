@@ -1,11 +1,13 @@
 package darkqol.industries.reverseEngineering;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
 import com.fs.starfarer.api.campaign.SpecialItemData;
+import com.fs.starfarer.api.campaign.econ.CommoditySpecAPI;
 import com.fs.starfarer.api.campaign.econ.Industry;
 import com.fs.starfarer.api.campaign.econ.SubmarketAPI;
 import com.fs.starfarer.api.combat.ShipHullSpecAPI;
@@ -15,6 +17,7 @@ import com.fs.starfarer.api.impl.campaign.ids.Submarkets;
 import com.fs.starfarer.api.loading.FighterWingSpecAPI;
 import com.fs.starfarer.api.loading.WeaponSpecAPI;
 import com.fs.starfarer.api.ui.TooltipMakerAPI;
+import com.fs.starfarer.api.util.Misc;
 
 import darkqol.ids.Ids;
 import darkqol.utils.DailyCycleTracker;
@@ -56,6 +59,84 @@ public class ReverseEngineeringIndustry extends MultiTierIndustry {
         return toReturn;
     }
 
+    protected void addCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode, String coreLevel,
+            float dayReductionPercentage, int researchAdvance) {
+        float opad = 10.0F;
+        Color highlight = Misc.getHighlightColor();
+        String pre = coreLevel + "-level AI core currently assigned. ";
+        if (mode == AICoreDescriptionMode.MANAGE_CORE_DIALOG_LIST || mode == AICoreDescriptionMode.INDUSTRY_TOOLTIP) {
+            pre = coreLevel + "-level AI core. ";
+        }
+
+        if (mode != AICoreDescriptionMode.INDUSTRY_TOOLTIP && mode != AICoreDescriptionMode.MANAGE_CORE_TOOLTIP) {
+            tooltip.addPara(
+                    pre + "Reduces upkeep cost by %s. " +
+                            "Reduces research time by %s%%. " +
+                            "Advances research progress by %s points.",
+                    opad, highlight,
+                    new String[] { (int) ((1.0F - UPKEEP_MULT) * 100.0F) + "%",
+                            "" + (int) (dayReductionPercentage * 100),
+                            "" + researchAdvance });
+        } else {
+            CommoditySpecAPI coreSpec = Global.getSettings().getCommoditySpec(this.aiCoreId);
+            TooltipMakerAPI text = tooltip.beginImageWithText(coreSpec.getIconName(), 48.0F);
+            text.addPara(
+                    pre + "Reduces upkeep cost by %s. " +
+                            "Reduces research time by %s%%. " +
+                            "Advances research progress by %s points.",
+                    0.0F, highlight,
+                    new String[] { (int) ((1.0F - UPKEEP_MULT) * 100.0F) + "%",
+                            "" + (int) (dayReductionPercentage * 100),
+                            "" + researchAdvance });
+            tooltip.addImageWithText(opad);
+        }
+    }
+
+    @Override
+    protected void addAlphaCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode) {
+        ReverseEngineeringShipIndustry shipIndustry = (ReverseEngineeringShipIndustry) getIndustryById(
+                Ids.REVERSE_ENG_3_IND);
+        addCoreDescription(tooltip, mode, "Alpha", shipIndustry.AI_ALPHA_DAYREQUIRED_REDUCTION,
+                shipIndustry.AI_ALPHA_RESEARCH_ADVANCE_ADD);
+    }
+
+    @Override
+    protected void addBetaCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode) {
+        ReverseEngineeringShipIndustry shipIndustry = (ReverseEngineeringShipIndustry) getIndustryById(
+                Ids.REVERSE_ENG_3_IND);
+        addCoreDescription(tooltip, mode, "Beta", shipIndustry.AI_BETA_DAYREQUIRED_REDUCTION,
+                shipIndustry.AI_BETA_RESEARCH_ADVANCE_ADD);
+    }
+
+    @Override
+    protected void addGammaCoreDescription(TooltipMakerAPI tooltip, Industry.AICoreDescriptionMode mode) {
+        ReverseEngineeringShipIndustry shipIndustry = (ReverseEngineeringShipIndustry) getIndustryById(
+                Ids.REVERSE_ENG_3_IND);
+        addCoreDescription(tooltip, mode, "Gamma", shipIndustry.AI_GAMMA_DAYREQUIRED_REDUCTION, 0);
+    }
+
+    @Override
+    public void addImproveDesc(TooltipMakerAPI info, ImprovementDescriptionMode mode) {
+        float opad = 10f;
+        Color highlight = Misc.getHighlightColor();
+
+        ReverseEngineeringShipIndustry shipIndustry = (ReverseEngineeringShipIndustry) getIndustryById(
+                Ids.REVERSE_ENG_3_IND);
+
+        if (mode == ImprovementDescriptionMode.INDUSTRY_TOOLTIP) {
+            info.addPara("Reduces research time by %s%%. " +
+                    "Advances research progress by %s points.",
+                    0f, highlight, "" + (int) (0.10f * 100), "" + shipIndustry.IMPROVE_RESEARCH_ADVANCE_ADD);
+        } else {
+            info.addPara("Reduces research time by %s%%. " +
+                    "Advances research progress by %s points.",
+                    0f, highlight, "" + (int) (0.10f * 100), "" + shipIndustry.IMPROVE_RESEARCH_ADVANCE_ADD);
+        }
+
+        info.addSpacer(opad);
+        super.addImproveDesc(info, mode);
+    }
+
     @Override
     protected void addRightAfterDescriptionSection(TooltipMakerAPI tooltip, Industry.IndustryTooltipMode mode) {
         if (isTier(3)) {
@@ -90,6 +171,16 @@ public class ReverseEngineeringIndustry extends MultiTierIndustry {
     @Override
     public boolean canImprove() {
         return true;
+    }
+
+    @Override
+    public boolean canBeDisrupted() {
+        return false;
+    }
+
+    @Override
+    public boolean isAvailableToBuild() {
+        return market.isPlayerOwned();
     }
 }
 

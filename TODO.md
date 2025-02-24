@@ -7,7 +7,7 @@
 - [x] Define tiers (Tier 1, Tier 2, Tier 3).
 - [x] Add unique effects or bonuses for each tier.
 - [x] Ensure higher tiers unlock new functionalities or improve existing ones.
-- [ ] Save progression when upgrading or downgrading the building.
+- [x] Save progression when upgrading or downgrading the building.
 
 ### 2. Adjust Reverse Time Based on Item Type (Weapons, Wings, Ships)
 
@@ -16,9 +16,9 @@
 
 ### 3. Adjust Reverse Time Based on Ship Size
 
-- [ ] Add a "size" property to ships (small, medium, large).
-- [ ] Define time multipliers for each size category.
-- [ ] Implement reverse time calculation based on ship size.
+- [x] Add a "size" property to ships (small, medium, large).
+- [x] Define time multipliers for each size category.
+- [x] Implement reverse time calculation based on ship size.
 
 ### 4. Manage AI Time Reduction Using Percentages Instead of Raw Values
 
@@ -65,6 +65,6 @@
 
 ### 10. Create Unique Images for Each Tier of the Reverse Engineering Building
 
-- [ ] Design unique visuals for each tier (Tier 1, Tier 2, Tier 3, etc.).
+- [ ] Design unique visuals for each tier (Tier 1, Tier 2, Tier 3).
 - [ ] Integrate the new images into the game.
 - [ ] Ensure the correct image is displayed based on the selected tier.
