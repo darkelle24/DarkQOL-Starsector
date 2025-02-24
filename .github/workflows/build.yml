@@ -26,7 +26,7 @@ jobs:
       - name: Create RAR Archive
         run: |
           mkdir -p DarkQOL
-          cp -r data graphics jars mod_info.json DarkQOL/ 
+          cp -r data graphics jars mod_info.json dark_qol.version TODO.md DarkQOL/ 
           rar a -r DarkQOL.rar DarkQOL/
 
       - name: Read mod version
@@ -73,10 +73,3 @@ jobs:
           files: DarkQOL.rar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Artifact (RAR)
-        uses: actions/upload-artifact@v4
-        with:
-          name: DarkQOL
-          path: DarkQOL.rar
-          retention-days: 7  # Supprime l'artefact après 7 jours
