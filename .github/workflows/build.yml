@@ -29,22 +29,54 @@ jobs:
           cp -r data graphics jars mod_info.json PlayerWeaponShop/ 
           rar a -r PlayerWeaponShop.rar PlayerWeaponShop/
 
-      - name: Upload Artifact (RAR)
-        uses: actions/upload-artifact@v4
-        with:
-          name: PlayerWeaponShop
-          path: PlayerWeaponShop.rar
-          retention-days: 7  # Supprime l'artefact après 7 jours
+      - name: Read mod version
+        id: mod_version
+        run: |
+          VERSION=$(jq -r '.modVersion | "\(.major).\(.minor).\(.patch)"' dark_qol.version)
+          echo "Extracted version: $VERSION"
+          echo "::set-output name=version::$VERSION"
+
+      - name: Check if release exists
+        id: check_release
+        run: |
+          RELEASE_EXISTS=$(gh release view v${{ steps.mod_version.outputs.version }} --json tagName -q '.tagName' 2>/dev/null || echo "false")
+          if [ "$RELEASE_EXISTS" != "false" ]; then
+            echo "::set-output name=exists::true"
+          else
+            echo "::set-output name=exists::false"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Increment patch version if release exists
+        id: increment_version
+        if: steps.check_release.outputs.exists == 'true'
+        run: |
+          VERSION=${{ steps.mod_version.outputs.version }}
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          PATCH=$(echo $VERSION | cut -d. -f3)
+          NEW_PATCH=$((PATCH + 1))
+          NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
+          echo "Incremented version: $NEW_VERSION"
+          echo "::set-output name=version::$NEW_VERSION"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         if: github.ref == 'refs/heads/main'
         with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: PlayerWeaponShop Release v1.0.${{ github.run_number }}
+          tag_name: v${{ steps.increment_version.outputs.version || steps.mod_version.outputs.version }}
+          name: PlayerWeaponShop Release v${{ steps.increment_version.outputs.version || steps.mod_version.outputs.version }}
           body: "Automated release of PlayerWeaponShop mod."
           draft: false
           prerelease: false
           files: PlayerWeaponShop.rar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifact (RAR)
+        uses: actions/upload-artifact@v4
+        with:
+          name: PlayerWeaponShop
+          path: PlayerWeaponShop.rar
+          retention-days: 7  # Supprime l'artefact après 7 jours
