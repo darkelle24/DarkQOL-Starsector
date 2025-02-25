@@ -38,9 +38,9 @@
 
 ### 6. Create a Building That Spawns a Gate Near the Planet
 
-- [ ] Design a new "Gate Spawner" building.
-- [ ] Implement the functionality to spawn a gate near the planet.
-- [ ] Define costs and conditions for using the building.
+- [x] Design a new "Gate Spawner" building.
+- [x] Implement the functionality to spawn a gate near the planet.
+- [x] Define costs and conditions for using the building.
 
 ### 7. Create an Item That Spawns a Temporary Gate
 
