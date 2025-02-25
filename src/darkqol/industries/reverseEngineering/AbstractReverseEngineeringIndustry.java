@@ -194,9 +194,9 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
 
     private void checkBlueprintUnlock(String id) {
         Map<String, Float> progressList = reverseEngProgressList.getData();
-        debugLog("Checking blueprint unlock for " + id + ". Progress: " + progressList.getOrDefault(id, 0f));
+        debugLog("Checking blueprint unlock for " + id + ". Progress: " + getOrDefault(progressList, id, 0f));
 
-        if (progressList.getOrDefault(id, 0f) >= NUMBER_REVERSE_TO_GET_BP) {
+        if (getOrDefault(progressList, id, 0f) >= NUMBER_REVERSE_TO_GET_BP) {
 
             if (generateBlueprint(id)) {
                 progressList.remove(id);
@@ -221,7 +221,7 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
         Map<String, Float> progressList = reverseEngProgressList.getData();
         int researchAdvance = calculateResearchAdvance();
 
-        float progress = progressList.getOrDefault(itemId, 0f) + researchAdvance;
+        float progress = getOrDefault(progressList, itemId, 0f) + researchAdvance;
         progressList.put(itemId, progress);
         reverseEngProgressList.setData(progressList);
         return progress;
@@ -248,13 +248,17 @@ public abstract class AbstractReverseEngineeringIndustry<T> extends AbstractSubm
 
     protected void checkBlueprintUnlock(String itemId, String blueprintType) {
         Map<String, Float> progressList = reverseEngProgressList.getData();
-        debugLog("Checking blueprint unlock for " + itemId + ". Progress: " + progressList.getOrDefault(itemId, 0f));
+        debugLog("Checking blueprint unlock for " + itemId + ". Progress: " + getOrDefault(progressList, itemId, 0f));
 
-        if (progressList.getOrDefault(itemId, 0f) >= NUMBER_REVERSE_TO_GET_BP) {
+        if (getOrDefault(progressList, itemId, 0f) >= NUMBER_REVERSE_TO_GET_BP) {
             generateBlueprint(itemId, blueprintType);
             progressList.remove(itemId);
             reverseEngProgressList.setData(progressList);
         }
+    }
+
+    public static float getOrDefault(Map<String, Float> map, String key, float defaultValue) {
+        return map.containsKey(key) ? map.get(key) : defaultValue;
     }
 
     protected void generateBlueprint(String itemId, String blueprintType) {
