@@ -1,0 +1,9 @@
+{
+    "Faction System": {
+        "name": "Faction System",
+        "color": "buttonShortcut",
+        "width": 119,
+        "putFirst": true,
+        "sort": 60
+    }
+}

@@ -4,17 +4,24 @@
     ],
     "java.project.outputPath": "bin",
     "java.project.referencedLibraries": [
-        "lib/**/*.jar",
-        "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\lwjgl.jar",
-        "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\json.jar",
         "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\xstream-1.4.10.jar",
-        "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\starfarer.api.jar",
+        "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\lwjgl_util.jar",
+        "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\json.jar",
+        "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\lwjgl.jar",
         "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\log4j-1.2.9.jar",
         "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\mods\\Console Commands-2024.10.04\\jars\\lw_Console.jar",
-        "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\lwjgl_util.jar"
+        "c:\\Program Files (x86)\\Fractal Softworks\\Starsector\\starsector-core\\starfarer.api.jar"
     ],
     "java.format.settings.organizeImports": true,
     "editor.codeActionsOnSave": {
         "source.organizeImports": "explicit"
     },
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-1.7",
+            "path": "C:\\Program Files (x86)\\Java\\JDK7",
+            "default": true
+        }
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

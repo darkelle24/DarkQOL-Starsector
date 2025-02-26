@@ -33,23 +33,42 @@ if os.path.exists("jars/DarkQOL.jar"):
     os.remove("jars/DarkQOL.jar")
     print("Ancien DarkQOL.jar supprimé.")
 
-if os.path.exists("bin"):
+""" if os.path.exists("bin"):
     os.system("rd /s /q bin")
-    print("Dossier bin supprimé.")
+    print("Dossier bin supprimé.") 
 
 os.makedirs("bin", exist_ok=True)
+
+    """
+
+if os.path.exists("target"):
+    os.system("rd /s /q target")
+    print("Dossier target supprimé.")
 
 # Get all Java files in src directory and subdirectories
 java_files = glob.glob('src/**/*.java', recursive=True)
 
 # Build the javac command
-javac_command = (
+""" javac_command = (
     f'del ..\\DarkQOL.rar &&'
     f'"{javac_path}" -d bin -source 7 -target 7 -sourcepath src -cp "{classpath}" {" ".join(java_files)} && '
     f'"{jar_path}" cvf jars\\DarkQOL.jar -C bin . && '
     f'"{winrar_path}" a -r ..\\DarkQOL.rar ./**'
+) """
+
+javac_command = (
+    f'del ..\\DarkQOL.rar &&'
+    f'mvn clean compile package &&'
+    f'"{winrar_path}" a -r ..\\DarkQOL.rar ./**'
 )
 
+""" javac_command = (
+    f'del ..\\DarkQOL.rar &&'
+    f'javac -d bin -source 21 -target 21 -sourcepath src -cp "{classpath}" {" ".join(java_files)} && '
+    f'"{jar_path}" cvf jars\\DarkQOL.jar -C bin . && '
+    f'"{winrar_path}" a -r ..\\DarkQOL.rar ./**'
+)
+ """
 print("Commande générée :")
 print(javac_command)
 

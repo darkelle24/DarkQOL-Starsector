@@ -1,0 +1,112 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>darkelle24</groupId>
+    <artifactId>DarkQOL-Starsector</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!-- Dépendances Starsector -->
+        <dependency>
+            <groupId>starsector</groupId>
+            <artifactId>starfarer-api</artifactId>
+            <version>0.96a</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/starfarer.api.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>starsector</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.10</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/xstream-1.4.10.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>starsector</groupId>
+            <artifactId>lwjgl_util</artifactId>
+            <version>2.9.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/lwjgl_util.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>starsector</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/json.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>starsector</groupId>
+            <artifactId>lwjgl</artifactId>
+            <version>2.9.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/lwjgl.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>starsector</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.9</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/log4j-1.2.9.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>starsector</groupId>
+            <artifactId>lw_Console</artifactId>
+            <version>2024.10.04</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/lw_Console.jar</systemPath>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>${project.basedir}/src</sourceDirectory>
+        <plugins>
+            <!-- Compiler avec Java 7 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <fork>true</fork>
+                    <executable>C:\Program Files (x86)\Java\JDK7\bin\javac</executable>
+                </configuration>
+            </plugin>
+
+            <!-- Génération du JAR avec classpath -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <outputDirectory>${project.basedir}/jars</outputDirectory>
+                    <finalName>DarkQOL</finalName>
+                    <archive>
+                        <manifest>
+                            <mainClass>darkqol.DarkQOLModPlugin</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
