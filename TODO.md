@@ -1,70 +1,31 @@
 # DarkQOL Project
 
-## Core Features
-
-### 1. Add Different Tiers for the Reverse Engineering Building
-
-- [x] Define tiers (Tier 1, Tier 2, Tier 3).
-- [x] Add unique effects or bonuses for each tier.
-- [x] Ensure higher tiers unlock new functionalities or improve existing ones.
-- [x] Save progression when upgrading or downgrading the building.
-
-### 2. Adjust Reverse Time Based on Item Type (Weapons, Wings, Ships)
-
-- [x] Define base reverse times for each item type.
-- [x] Implement a system to adjust reverse time based on the item type.
-
-### 3. Adjust Reverse Time Based on Ship Size
-
-- [x] Add a "size" property to ships (small, medium, large).
-- [x] Define time multipliers for each size category.
-- [x] Implement reverse time calculation based on ship size.
-
-### 4. Manage AI Time Reduction Using Percentages Instead of Raw Values
-
-- [x] Replace the current raw value system with percentages.
-- [x] Define percentage reductions based on AI level.
-- [x] Implement the final reverse time calculation using percentages.
-
-### 5. Add Tier-Based Error Messages for Items
-
-- [x] Identify error cases (e.g., tier too low to reverse an item).
-- [x] Create clear and informative error messages.
-- [x] Implement these messages in the user interface.
-
----
-
-## New Functionalities
-
-### 6. Create a Building That Spawns a Gate Near the Planet
-
-- [x] Design a new "Gate Spawner" building.
-- [x] Implement the functionality to spawn a gate near the planet.
-- [x] Define costs and conditions for using the building.
-
-### 7. Create an Item That Spawns a Temporary Gate
+## 1. Create an Item That Spawns a Temporary Gate
 
 - [ ] Design a new "Temporary Gate" item.
 - [ ] Implement the functionality to spawn a temporary gate.
 - [ ] Define the gate's lifespan and usage conditions.
 
-### 8. Create a Research Item That Can Be Produced by a Special Building
+## 2. Create a Research Item That Can Be Produced by a Special Building
 
 - [ ] Design a new "Research Item."
 - [ ] Create a special building to produce the research item.
 - [ ] Define resources and time required to produce the item.
 
-### 9. Use the Research Item to Activate the Reverse Engineering Building
+## 3. Use the Research Item to Activate the Reverse Engineering Building
 
 - [ ] Link the research item to the reverse engineering building.
 - [ ] Implement a system where the item is consumed to activate reverse engineering.
 
----
-
-## Visual Improvements
-
-### 10. Create Unique Images for Each Tier of the Reverse Engineering Building
+## 4. Create Unique Images for Each Tier of the Reverse Engineering Building
 
 - [ ] Design unique visuals for each tier (Tier 1, Tier 2, Tier 3).
 - [ ] Integrate the new images into the game.
 - [ ] Ensure the correct image is displayed based on the selected tier.
+
+## 5. Create a Faction-Specific Intel Menu
+
+- [x] Design a new menu in the Intel section that displays all systems with planets owned by the selected faction.
+- [x] Implement a filter system to allow players to select a specific faction and view relevant systems.
+- [x] Add functionality to click on a system in the menu to center the map view on that system.
+- [ ] Add a system to either show the list of systems belonging to the faction or the list of planets owned by the faction.

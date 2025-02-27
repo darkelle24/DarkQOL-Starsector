@@ -85,7 +85,9 @@
                     <source>1.7</source>
                     <target>1.7</target>
                     <fork>true</fork>
-                    <executable>C:\Program Files (x86)\Java\JDK7\bin\javac</executable>
+                    <!-- C:\Program Files (x86)\Java\JDK7 no DCEM\bin\javac -->
+                    <!-- C:\Program Files (x86)\Java\JDK7\bin\javac -->
+                    <executable>C:\Program Files (x86)\Java\JDK7 no DCEM\bin\javac</executable> 
                 </configuration>
             </plugin>
 
