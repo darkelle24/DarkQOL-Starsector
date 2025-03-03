@@ -1,8 +1,10 @@
 package darkqol.industries.reverseEngineering;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import com.fs.starfarer.api.Global;
 import com.fs.starfarer.api.campaign.CargoAPI;
@@ -56,6 +58,8 @@ public class ReverseEngineeringIndustry extends MultiTierIndustry {
         } else if (isTier(3)) {
             toReturn += "Tier 3: Weapons, fighter wings, and ships are allowed.";
         }
+        toReturn += "\n\n";
+        toReturn += "Choose in priority the item you don t have discovered yet.";
         return toReturn;
     }
 
@@ -217,7 +221,23 @@ class ReverseEngineeringShipIndustry extends AbstractReverseEngineeringIndustry<
             return false;
         }
 
+        Set<String> unlockedShips = Global.getSector().getPlayerFaction().getKnownShips();
+        List<FleetMemberAPI> availableShips = new ArrayList<>();
+        List<FleetMemberAPI> allInCargoShips = new ArrayList<>();
+
         for (FleetMemberAPI ship : ships) {
+            String shipHullId = ship.getHullId();
+            if (!unlockedShips.contains(shipHullId)) {
+                availableShips.add(ship);
+            }
+            allInCargoShips.add(ship);
+        }
+
+        if (availableShips.isEmpty()) {
+            availableShips.addAll(allInCargoShips);
+        }
+
+        for (FleetMemberAPI ship : availableShips) {
             if (ship != null) {
                 currentReverseEng = ship.getVariant();
                 transferWeaponsAndWingsToStorage(ship);
@@ -225,6 +245,7 @@ class ReverseEngineeringShipIndustry extends AbstractReverseEngineeringIndustry<
                 return true;
             }
         }
+
         return false;
     }
 
@@ -343,8 +364,23 @@ class ReverseEngineeringWeaponIndustry extends AbstractReverseEngineeringIndustr
             return false;
         }
 
+        Set<String> unlockedWeapons = Global.getSector().getPlayerFaction().getKnownWeapons();
+        List<String> availableWeapons = new ArrayList<>();
+        List<String> allInCargoWeapons = new ArrayList<>();
+
         for (CargoAPI.CargoItemQuantity<String> weaponItem : weaponItems) {
             String weaponId = weaponItem.getItem();
+            if (!unlockedWeapons.contains(weaponId)) {
+                availableWeapons.add(weaponId);
+            }
+            allInCargoWeapons.add(weaponId);
+        }
+
+        if (availableWeapons.isEmpty()) {
+            availableWeapons.addAll(allInCargoWeapons);
+        }
+
+        for (String weaponId : availableWeapons) {
             WeaponSpecAPI weaponSpec = Global.getSettings().getWeaponSpec(weaponId);
 
             if (weaponSpec != null) {
@@ -415,8 +451,24 @@ class ReverseEngineeringFighterWingIndustry extends AbstractReverseEngineeringIn
             return false;
         }
 
+        Set<String> unlockedFighter = Global.getSector().getPlayerFaction().getKnownFighters();
+        List<String> availableFighter = new ArrayList<>();
+        List<String> allInCargoFighter = new ArrayList<>();
+
         for (CargoAPI.CargoItemQuantity<String> fighterWingItem : fighterWingItems) {
             String fighterWingId = fighterWingItem.getItem();
+            if (!unlockedFighter.contains(fighterWingId)) {
+                availableFighter.add(fighterWingId);
+            }
+            allInCargoFighter.add(fighterWingId);
+        }
+
+        if (availableFighter.isEmpty()) {
+            availableFighter.addAll(allInCargoFighter);
+        }
+
+        for (String fighterWingId : availableFighter) {
+
             FighterWingSpecAPI fighterWingSpec = Global.getSettings().getFighterWingSpec(fighterWingId);
 
             if (fighterWingSpec != null) {

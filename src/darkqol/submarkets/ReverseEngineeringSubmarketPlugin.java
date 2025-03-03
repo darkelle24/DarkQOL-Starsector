@@ -46,6 +46,8 @@ public class ReverseEngineeringSubmarketPlugin extends DarkBaseSubmarketPlugin {
         } else if (market.hasIndustry(Ids.REVERSE_ENG_3_IND)) {
             toReturn += "Tier 3: Weapons, fighter wings, and ships are allowed.";
         }
+        toReturn += "\n\n";
+        toReturn += "Choose in priority the item you don t have discovered yet.";
         return toReturn;
     }
 
